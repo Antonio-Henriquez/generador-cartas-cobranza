@@ -118,11 +118,11 @@
             <div class="grid">
                 <div class="field">
                     <label>Porcentaje Pie (%)</label>
-                    <input type="number" id="porcentajePie" placeholder="30" min="0" max="100">
+                    <input type="number" id="porcentajePie" min="0" max="100">
                 </div>
                 <div class="field">
                     <label>Número de Cuotas</label>
-                    <input type="number" id="numeroCuotas" placeholder="3" min="1">
+                    <input type="number" id="numeroCuotas" min="1">
                 </div>
             </div>
             
@@ -562,12 +562,17 @@ Entendiendo que pueden existir situaciones excepcionales, esta administración, 
 • PIE INICIAL: Pago inmediato del ${convenio.porcentaje}% de la deuda total (${formatearMonto(convenio.montoPie).toUpperCase()}).
 • CUOTAS: El saldo restante (${formatearMonto(convenio.saldo).toUpperCase()}) podrá ser pactado en hasta ${convenio.numCuotas} cuotas mensuales de ${formatearMonto(convenio.montoCuota).toUpperCase()} cada una, las cuales deberán ser pagadas EN CONJUNTO con el gasto común del mes en curso.`;
             } else {
+                // Si no hay convenio pre-calculado, informar sobre el derecho a solicitarlo
                 texto += `
-• PIE INICIAL: Pago inmediato del 30% de la deuda total.
-• CUOTAS: El saldo restante podrá ser pactado en hasta 3 cuotas mensuales, las cuales deberán ser pagadas EN CONJUNTO con el gasto común del mes en curso.`;
+De conformidad con el Artículo 6 de la Ley N° 21.442 de Copropiedad Inmobiliaria, usted tiene el derecho de solicitar a la administración un convenio de pago para regularizar su deuda en cuotas mensuales.
+
+Para ejercer este derecho, deberá presentar una solicitud formal a la administración, la cual será evaluada por el Comité de Administración conforme a la normativa vigente.
+
+El incumplimiento de cualquier cuota del convenio pactado dejará sin efecto el acuerdo, haciéndose exigible la totalidad de la deuda.`;
             }
             
             texto += `
+
 • CONDICIÓN: El incumplimiento de UNA SOLA CUOTA del convenio anulará automáticamente este beneficio, haciéndose exigible el TOTAL DE LA DEUDA y procediendo de inmediato a las medidas de corte de servicios y cobranza judicial mencionadas.
 
 IV. PLAZO PERENTORIO PARA REGULARIZACIÓN
@@ -586,6 +591,7 @@ RUT: ${d.rutTitular}
 EMAIL CONFIRMACIÓN: ${d.emailConfirmacion}
 
 CONTACTO ADMINISTRACIÓN:
+Teléfono: +56 32 362 0837
 Email: simeoneadm@gmail.com
 
 ═══════════════════════════════════════════════════════════════
@@ -694,19 +700,24 @@ Email: simeoneadm@gmail.com`;
                     txt('Abogado', 10, false, 'center');
                     txt('RUT: 9.321.472-2', 9, false, 'center');
                     txt('Teléfono: +56 9 8901 8303 | Email: pvillagranc@gmail.com', 9, false, 'center');
-                    sp(10);
+                    sp(5);
                     txt(`Viña del Mar, ${obtenerFecha()}`, 10, false, 'right');
-                    sp(10);
+                    sp(5);
                     txt('CARTA DE COBRANZA EXTRAJUDICIAL Y NOTIFICACIÓN DE MORA', 12, true, 'center');
-                    sp(8);
+                    sp(4);
                     txt('DE: ADMINISTRACIÓN EDIFICIO CONTEMPORÁNEO', 10, true);
                     txt(`PARA: ${d.nombre.toUpperCase()}`, 10, true);
                     
                     // Mostrar unidades dinámicamente con números alineados a la derecha
                     if (d.unidades && d.unidades.length > 0) {
                         d.unidades.forEach(u => {
-                            const espacios = ' '.repeat(Math.max(0, 35 - u.tipo.length - u.numero.length - 3));
-                            txt(`${u.tipo}${espacios}N° ${u.numero.toUpperCase()}`, 10, true);
+                            // Tipo de unidad a la izquierda
+                            doc.setFont('helvetica', 'bold');
+                            doc.setFontSize(10);
+                            doc.text(u.tipo, m, y);
+                            // Número alineado a la derecha
+                            doc.text(`N° ${u.numero.toUpperCase()}`, w - m - 40, y);
+                            y += 5;
                         });
                     }
                     
@@ -733,35 +744,35 @@ Email: simeoneadm@gmail.com`;
                     parrafo += '.';
                     txt(parrafo, 10, false);
                     
-                    sp(8);
+                    sp(4);
                     txt('I. MARCO LEGAL Y ATRIBUCIONES', 11, true);
-                    sp(5);
+                    sp(3);
                     txt('Le recordamos que, conforme a la LEY N° 21.442 DE COPROPIEDAD INMOBILIARIA y el Reglamento de Copropiedad del edificio, el pago de los gastos comunes es una OBLIGACIÓN LEGAL IRRENUNCIABLE. En este contexto, la administración está facultada por los ARTÍCULOS 6, 20 Y 33 de dicha ley para ejercer las siguientes acciones en caso de incumplimiento:', 10, false);
-                    sp(5);
+                    sp(3);
                     txt('a) CORTE DE SUMINISTRO ELÉCTRICO:', 10, true);
                     txt('La administración está facultada por ley para suspender el servicio de energía eléctrica ante mora de 3 o más cuotas mensuales. En caso de suspensión, la reconexión del servicio solo procederá una vez regularizada la totalidad de la deuda.', 10, false);
-                    sp(4);
+                    sp(2);
                     txt('b) INTERESES Y RECARGOS:', 10, true);
                     txt('La deuda devengará INTERÉS MÁXIMO CONVENCIONAL por cada día de retraso, además de las multas establecidas en el Reglamento de Copropiedad.', 10, false);
-                    sp(4);
+                    sp(2);
                     txt('c) COBRANZA JUDICIAL - MÉRITO EJECUTIVO:', 10, true);
                     txt('El aviso de cobro de gastos comunes tiene MÉRITO EJECUTIVO, lo que permite iniciar acciones legales ante el Juzgado Civil correspondiente, con posibilidad de EMBARGO DE BIENES de la oficina para cubrir la deuda, intereses, costas procesales y honorarios profesionales.', 10, false);
-                    sp(4);
+                    sp(2);
                     txt('d) PUBLICACIÓN DE MOROSIDAD:', 10, true);
                     txt('Reporte de la deuda en boletines comerciales y registros de mora.', 10, false);
                     
-                    sp(8);
+                    sp(4);
                     txt('II. IMPACTO EN LA COMUNIDAD Y PLUSVALÍA', 11, true);
-                    sp(5);
-                    txt('El incumplimiento de esta obligación genera un PERJUICIO CRÍTICO para toda la comunidad:', 10, false);
                     sp(3);
+                    txt('El incumplimiento de esta obligación genera un PERJUICIO CRÍTICO para toda la comunidad:', 10, false);
+                    sp(2);
                     txt('• Compromete la seguridad y operatividad de las instalaciones comunes por falta de liquidez.', 10, false);
                     txt('• Deteriora la PLUSVALÍA DEL INMUEBLE y su imagen corporativa.', 10, false);
                     txt('• Traslada injustamente la carga financiera a los copropietarios que cumplen puntualmente sus obligaciones.', 10, false);
                     
-                    sp(8);
+                    sp(4);
                     txt('III. PROPUESTA DE CONVENIO DE PAGO', 11, true);
-                    sp(5);
+                    sp(3);
                     txt('Entendiendo que pueden existir situaciones excepcionales, esta administración, en ejercicio de sus facultades y como ÚLTIMA INSTANCIA EXTRAJUDICIAL, le ofrece la posibilidad de suscribir un CONVENIO DE REGULARIZACIÓN DE DEUDA bajo las siguientes condiciones:', 10, false);
                     sp(3);
                     
@@ -771,20 +782,25 @@ Email: simeoneadm@gmail.com`;
                         txt(`• PIE INICIAL: Pago inmediato del ${convenio.porcentaje}% de la deuda total (${formatearMonto(convenio.montoPie).toUpperCase()}).`, 10, false);
                         txt(`• CUOTAS: El saldo restante (${formatearMonto(convenio.saldo).toUpperCase()}) podrá ser pactado en hasta ${convenio.numCuotas} cuotas mensuales de ${formatearMonto(convenio.montoCuota).toUpperCase()} cada una, las cuales deberán ser pagadas EN CONJUNTO con el gasto común del mes en curso.`, 10, false);
                     } else {
-                        txt('• PIE INICIAL: Pago inmediato del 30% de la deuda total.', 10, false);
-                        txt('• CUOTAS: El saldo restante podrá ser pactado en hasta 3 cuotas mensuales, las cuales deberán ser pagadas EN CONJUNTO con el gasto común del mes en curso.', 10, false);
+                        // Si no hay convenio pre-calculado, informar sobre el derecho a solicitarlo
+                        txt('De conformidad con el Artículo 6 de la Ley N° 21.442 de Copropiedad Inmobiliaria, usted tiene el derecho de solicitar a la administración un convenio de pago para regularizar su deuda en cuotas mensuales.', 10, false);
+                        sp(3);
+                        txt('Para ejercer este derecho, deberá presentar una solicitud formal a la administración, la cual será evaluada por el Comité de Administración conforme a la normativa vigente.', 10, false);
+                        sp(3);
+                        txt('El incumplimiento de cualquier cuota del convenio pactado dejará sin efecto el acuerdo, haciéndose exigible la totalidad de la deuda.', 10, false);
+                        sp(3);
                     }
                     
                     txt('• CONDICIÓN: El incumplimiento de UNA SOLA CUOTA del convenio anulará automáticamente este beneficio, haciéndose exigible el TOTAL DE LA DEUDA y procediendo de inmediato a las medidas de corte de servicios y cobranza judicial mencionadas.', 10, false);
                     
-                    sp(8);
+                    sp(4);
                     txt('IV. PLAZO PERENTORIO PARA REGULARIZACIÓN', 11, true);
-                    sp(5);
+                    sp(3);
                     txt(`Si no se registra el PAGO TOTAL o la suscripción formal del CONVENIO DE PAGO en un plazo máximo de ${d.plazo} DÍAS HÁBILES contadas desde la recepción de la presente, se procederá SIN MÁS AVISO a ejercer todas las atribuciones legales antes mencionadas.`, 10, false);
                     
-                    sp(8);
+                    sp(4);
                     txt('V. FORMA DE PAGO', 11, true);
-                    sp(5);
+                    sp(3);
                     txt('El pago puede realizarse mediante transferencia bancaria en los siguientes datos:', 10, false);
                     sp(3);
                     txt(`BANCO: ${d.banco.toUpperCase()}`, 10, false);
@@ -795,7 +811,12 @@ Email: simeoneadm@gmail.com`;
                     txt(`EMAIL CONFIRMACIÓN: ${d.emailConfirmacion}`, 10, false);
                     sp(5);
                     txt('CONTACTO ADMINISTRACIÓN:', 10, true);
+                    txt('Teléfono: +56 32 362 0837', 10, false);
                     txt('Email: simeoneadm@gmail.com', 10, false);
+                    
+                    // CRÍTICO: Verificar espacio para TODO el bloque final (línea + párrafo + firma + administración)
+                    // Se hace AQUÍ para que todo el bloque final salte junto
+                    if (y > h - 140) { doc.addPage(); y = m; }
                     
                     sp(10);
                     doc.line(m, y, w-m, y);
@@ -803,13 +824,26 @@ Email: simeoneadm@gmail.com`;
                     
                     txt('Esta es su última oportunidad para regularizar su situación de manera extrajudicial. Evite los costos adicionales por honorarios de cobranza judicial, intereses, multas y las molestias asociadas a la suspensión de servicios.', 10, false);
                     
-                    sp(15);
+                    sp(8);
                     txt('Atentamente,', 10, false);
-                    sp(20);
+                    sp(10);
+                    
+                    // Nombre en cursiva sobre la línea
+                    doc.setFont('helvetica', 'italic');
+                    doc.setFontSize(12);
+                    doc.text('Pedro Villagrán Cruzat', m, y);
+                    y += 5;
+                    
+                    // Línea de firma
+                    doc.setFont('helvetica', 'normal');
+                    doc.line(m, y, m + 80, y);
+                    y += 8;
+                    
+                    // Datos del abogado
                     txt('Abogado Sr. Pedro Villagrán Cruzat', 10, true);
                     txt('RUT: 9.321.472-2', 10, false);
                     txt('Celular: +56 9 8901 8303', 10, false);
-                    sp(8);
+                    sp(5);
                     txt('Por la Administración', 10, false);
                     txt('EDIFICIO CONTEMPORÁNEO', 10, true);
                     txt('Limache 1724, Viña del Mar', 10, false);
